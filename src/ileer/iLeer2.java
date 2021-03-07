@@ -43,7 +43,7 @@ public class iLeer2 {
             String sDirectorio = "/Users/dev/NetBeansProjects/iCompras/emails";
             String dirxml="/Users/dev/NetBeansProjects/iCompras/emails";
             String dirxmlout="/Users/dev/NetBeansProjects/iCompras/procesados";
-
+             //Lectura de Ficheros del Directorio
              String s;
              File f = new File(sDirectorio.toString());
              File[] ficheros = f.listFiles();
