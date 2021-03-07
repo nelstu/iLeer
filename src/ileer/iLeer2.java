@@ -5,7 +5,6 @@
  */
 package ileer;
 
-import static ileer.ILeer.fileMove;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -66,10 +65,10 @@ public class iLeer2 {
                      if (fe.equals("xml") || fe.equals("XML")){
                          System.out.println(s);
                          leerxml2(s,dirxml,dirxmlout);
-                       //  fileMove(dirxml+"/"+s, dirxmlout+"/"+s);  
+                         fileMove(dirxml+"/"+s, dirxmlout+"/"+s);  
                         
                          }else{
-                       //  fileMove(dirxml+"/"+s, dirxmlout+"/"+s);     
+                         fileMove(dirxml+"/"+s, dirxmlout+"/"+s);     
                         }
                       }
                 if (ficheros.length==0){
@@ -238,39 +237,72 @@ public class iLeer2 {
                             } catch(Exception e){
                             e.printStackTrace();
                           }
-                        
+                         
                         //fin insertar encabezado
                         
                         //detalle
+                          String txtnombre="";String txtprecio="0";String txtmonto="0";String txtcant="0";
                             //-------NmbItem
                             NodeList nombre= firstPersonElement.getElementsByTagName("NmbItem");
                             int x=nombre.getLength();
                             System.out.println("largo->"+x);
                             
-                            Element dnombre =(Element)nombre.item(0);
-                            // System.out.println("Producto->"+dnombre.getTextContent().toString());
-                            //------NmbItem
+                            
+                        for(int e=0; e<x ; e++){  
+                            txtnombre="";txtprecio="0";txtmonto="0";txtcant="0";
+                            Element dnombre =(Element)nombre.item(e);
+                            if (dnombre != null) {
+                               txtnombre=dnombre.getTextContent().toString(); 
+                               }
+                            System.out.println("Nombre Producto->"+txtnombre);
                             //------PrcItem
                             NodeList precio= firstPersonElement.getElementsByTagName("PrcItem");
-                            //int x=precio.getLength();
-                            //System.out.println(x);
-                            Element dprecio =(Element)precio.item(0);
-                            // System.out.println("Precio->"+dprecio.getTextContent().toString());
+                            Element dprecio =(Element)precio.item(e);
+                             if (dprecio != null) {
+                               txtprecio=dprecio.getTextContent().toString(); 
+                               }
+                            System.out.println("Precio Producto->"+txtprecio);
                             //------PrcItem
                    
                             //-------MontoItem
                             NodeList monto= firstPersonElement.getElementsByTagName("MontoItem");
-                            //int x=nombre.getLength();
-                            //System.out.println(x);
-                            Element dmonto =(Element)monto.item(0);
-                            // System.out.println("Monto->"+dmonto.getTextContent().toString());
-                            //------MontoItem
+                            Element dmonto =(Element)monto.item(e);
+                            if (dmonto != null) {
+                               txtmonto=dmonto.getTextContent().toString(); 
+                               }
+                            System.out.println("Monto Producto->"+txtmonto);
                             //-------QtyItem
                             NodeList cant= firstPersonElement.getElementsByTagName("QtyItem");
-                            //int x=nombre.getLength();
-                            //System.out.println(x);
-                            Element dcant =(Element)cant.item(0);
-                        
+                            Element dcant =(Element)cant.item(e);
+                            if (dcant != null) {
+                               txtcant=dcant.getTextContent().toString(); 
+                               }
+                            System.out.println("Cant Producto->"+txtcant);
+                            
+                            
+                        Connection con1 = null;
+                        PreparedStatement pstmt1 = null;
+                        String query1 = "INSERT INTO detdocumentosc(numero,producto,precio,cantidad,total)" + "VALUES (?, ?, ?, ?, ?)";
+                        try {
+                            con = DriverManager.getConnection(JdbcURL, Username, password);
+                            pstmt1 = con.prepareStatement(query1);
+                            pstmt1.setString(1, txtnumero);
+                            pstmt1.setString(2, txtnombre);
+                            pstmt1.setString(3, txtprecio);
+                            pstmt1.setString(4, txtcant);
+                            pstmt1.setString(5, txtmonto);
+                   
+                            
+                            int status = pstmt1.executeUpdate();
+                            if(status > 0) {
+                               System.out.println("Record detalle is inserted successfully !!!");
+                               }
+                            } catch(Exception e1){
+                            e1.printStackTrace();
+                          }
+                         
+                            
+                        }
                         //fin detalle
                         
                         
